@@ -14,6 +14,9 @@ class Str {
  // This should return length of string without the null character.
   size_t size() const;
   // Add functions to overload operators so strtest.cpp works!
+  const char& operator[](const int i) const;
+  char& operator[](const int i);
+  friend std::ostream & operator<<(std::ostream& lhs, const Str& rhs);
 
   private:
   std::unique_ptr<char []> buffer;
