@@ -7,8 +7,10 @@ using namespace std;
 class GroceryList {
     public:
     GroceryList();
-GroceryList(size_t n);
+    GroceryList(size_t n);
+    GroceryList(const GroceryList& other);
     ~GroceryList();
+
     void addItem(string item);
     void removeItem(string item);
     void merge(const GroceryList& other);
@@ -16,6 +18,8 @@ GroceryList(size_t n);
     void printList() const;
     bool empty() const;
     size_t size()const;
+
+    GroceryList& operator=(const GroceryList& rhs);
     private:
     size_t num_items;
     size_t list_size;
@@ -32,6 +36,14 @@ GroceryList::GroceryList(size_t n){
     num_items = 0;
     list_size = n;
     list = make_unique<string []>(n);
+}
+GroceryList::GroceryList(const GroceryList& other){
+    this->num_items = other.num_items;
+    this->list_size = other.list_size;
+    this->list = make_unique<string []>(this->list_size);
+    for (int i = 0; i < this->num_items; i++) {
+        this->list[i] = other.list[i];
+    }
 }
 GroceryList::~GroceryList(){
     //cout <<"destroying list" <<endl;
@@ -91,11 +103,20 @@ void GroceryList::merge(const GroceryList& other){
     }
 }
 
+GroceryList& GroceryList::operator=(const GroceryList &rhs) {
+    if (&rhs == this) return *this;
+    list = make_unique<string []>(rhs.list_size);
+    this->num_items = rhs.num_items;
+    this->list_size = rhs.list_size;
+    for(size_t i = 0; i < num_items; i++) {
+        this->list[i] = rhs.list[i];
+    }
+    return *this;
+}
+
 int main()
-{
-   
+{   
    GroceryList list1, list2;
-   list1.printList();
    list1.addItem("apples");
    list1.addItem("bananas");
    list1.addItem("peaches");
@@ -103,9 +124,11 @@ int main()
    list2.addItem("onions");
    list2.addItem("peppers");
    list2.addItem("broccoli");
-   list1.merge(list2);
-   list1.printList();
-   list1.removeItem("broccoli");
-   list1.printList();
-  
+   GroceryList list3 = list1;
+   cout << boolalpha << (list1 == list3) << endl;
+   GroceryList list4 = list1 + list2;
+   list4.printList();
+   cout << list4[3] << endl;
+   list4[3] = "oatmeal";
+   list4.printList();
 }
