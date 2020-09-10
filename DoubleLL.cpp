@@ -17,7 +17,9 @@ DoubleLL& DoubleLL::operator=(DoubleLL const & other){
 	// Destructor. Should delete all data allocated by the list. 
 DoubleLL::~DoubleLL(){
   // we'll write this during class
-
+    while(!this->empty()) {
+        this->remove(tail);
+    }
 }
 
 	// Gets item at an index.
@@ -67,8 +69,37 @@ void DoubleLL::remove(size_t index){
 }
 
 void DoubleLL::remove(std::shared_ptr<Item> p){
-// we'll write during class
-// to help learn about shared_ptr reference counts
-// print the reference count
- std::cout << p.use_count() << std::endl;
+    // our implementation
+    if (count == 1) { // only one, remove it so that there is 0
+        head = nullptr;
+        tail = nullptr;
+    }
+    else if (p == head) { // move the head to the right
+        head = p->next;
+        head->prev = nullptr;
+    }
+    else if (p == tail) { // move the head to the left
+        tail = p->prev;
+        tail->next = nullptr;
+    }
+    else {
+        p->next->prev = p->prev; // remove the item from somewhere in the middle
+        p->prev->next = p->next;
+    }
+
+    /* discussed implementation
+    if (!p) return;
+    if (p != head) {
+        p->prev->next = p->next; // not the head, previous item must jump over this
+    } else {
+        head = p->next; // it is the head, set the new head
+    }
+    if (p != tail) {
+        p->next->prev = p->prev; // not the tail, next item must jump over this
+    } else {
+        tail = p->prev;
+    } */
+
+    count--;
+    std::cout << p.use_count() << std::endl;
 }
