@@ -36,26 +36,43 @@ int main(int argc, char *argv[])
   }
   zipfile.close();
 
-  // Key = zipcode, Value = Num. of Occurrences
-  // Iterate through all the zip codes in 'all_zips' and 
-  // create a map of zipcode to number of occurrences
+    // Key = zipcode, Value = Num. of Occurrences
+    // Iterate through all the zip codes in 'all_zips' and 
+    // create a map of zipcode to number of occurrences
+    map<int, int> occurrences;
+    map<int, int>::iterator map_it;
+    vector<int>::iterator vector_it;
+
+    for(vector_it = all_zips.begin(); vector_it != all_zips.end(); vector_it++){
+        map_it = occurrences.find(*vector_it);
+        if (map_it == occurrences.end()){
+            occurrences.insert(make_pair(*vector_it,1));
+        }
+        else {
+            map_it->second++;
+        }
+    }
+
+    cout << "Zip code, occurrence table" << endl;
+    // Print table of the zip codes with occurrences
+    for (map_it = occurrences.begin(); map_it != occurrences.end(); map_it++) {
+        cout << "Zip: " << map_it->first << " (Occurrences: " << map_it->second << ")" << endl;
+    }
+
+    // sort the zip codes
+    sort(all_zips.begin(), all_zips.end());
  
- 
+    // figure out the number of occurrences of the first zip code in sorted order 
+    //without using the map
+    int count = 0;
+    vector_it = all_zips.begin();
+    while (*vector_it == all_zips[0]) {
+        count++;
+        vector_it++;
+    }
+    cout << "occurrences of zip code " << all_zips[0]  << " : " << count << endl;
+    // can also get count with "count(all_zips.begin(), all_zips.end(), all_zips[0]"
 
-
-
-
-  cout << "Zip code, occurrence table" << endl;
-  // Print table of the zip codes with occurrences
-  
-
- // sort the zip codes
-
- 
-// figure out the number of occurrences of the first zip code in sorted order 
-//without using the map
-  cout << "occurrences of zip code " << "?" << " : " << "?" << endl;
-
-  return 0;
+    return 0;
   
 }
