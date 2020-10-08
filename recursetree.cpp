@@ -22,12 +22,33 @@ struct Item {
         // Implement count recursively to return the number of nodes in the tree
         int count();    
         // Implement height recursively to return the height of the tree
-        int height();   
+        int height();
         private:   
+        int count_help(shared_ptr<Item<T>> root);
+        int height_help(shared_ptr<Item<T>> root);
         shared_ptr<Item<T>> root;   
         // You may add private data members and functions
   };
-     
+
+template <typename T>
+int BinTree<T>::count() {
+    return count_help(root);
+}
+template <typename T>
+int BinTree<T>::count_help(shared_ptr<Item<T>> root) {
+    if (root == nullptr) return 0;
+    return 1 + count_help(root->left) + count_help(root->right);
+}
+
+template <typename T>
+int BinTree<T>::height() {
+    return height_help(root);
+}
+template <typename T>
+int BinTree<T>::height_help(shared_ptr<Item<T>> root) {
+    if (root == nullptr) return 0;
+    return 1 + max(height_help(root->left), height_help(root->right));
+}    
  
    
    int main(){    
@@ -72,4 +93,3 @@ struct Item {
           }    
              
    }
-        
