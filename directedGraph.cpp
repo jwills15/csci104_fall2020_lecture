@@ -37,9 +37,44 @@ The edge weights would be the same in both graphs.*/
 private:
 // feel free to add private member variables or functions
 // You should use STL vector, vector<BLANK>, but what should the BLANK be?
- 
+vector<vector<Edge>> in_list;
+vector<vector<Edge>> out_list;
+int nodes;
 
 };
+
+DirectedGraph::DirectedGraph(int n) {
+    for (int i = 0; i < n; ++i) {
+        out_list.push_back(vector<Edge>());
+        in_list.push_back(vector<Edge>());
+    }
+    nodes = n;
+}
+
+DirectedGraph::~DirectedGraph() {}
+
+void DirectedGraph::addEdge(int start, int end, int weight) {
+    if (start < 1 || end < 1 || start > nodes || end > nodes) return;
+
+    in_list[end - 1].push_back(Edge(start, weight));
+    out_list[start - 1].push_back(Edge(end, weight));
+}
+
+void DirectedGraph::countEdges(int node_label, int& outd, int& ind) const {
+    outd = 0;
+    ind = 0;
+    if (node_label > nodes || node_label < 1) return;
+
+    outd = out_list[node_label - 1].size();
+    ind = in_list[node_label - 1].size();
+}
+
+DirectedGraph DirectedGraph::transpose() {
+    DirectedGraph output(this->nodes);
+    output.in_list = out_list;
+    output.out_list = in_list;
+    return output;
+}
 
 
 int main()
