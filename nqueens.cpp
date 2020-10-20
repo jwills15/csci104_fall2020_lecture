@@ -11,7 +11,7 @@ using namespace std;
 
 //prototypes
 void addToThreats(int row, int col, int change);
-bool search(int row);
+void search(int row);
 void printSolution();
 void printEntry(int r, int c);
 
@@ -67,35 +67,30 @@ void addToThreats(int row, int col, int change)
   }
 }
 
-bool search(int row)
+void search(int row)
 {
-  if(row == n){
-    nsols++;
-    printSolution(); // solved!
-    return true;
-  }
-  else {
+    if(row == n){
+        nsols++;
+        printSolution(); // solved!
+        return;
+    } 
+
     for(q[row]=0; q[row]<n; q[row]++){
-      // check that col: q[row] is safe
-      if(t[row][q[row]] == 0){
-	// if safe place and continue
-	addToThreats(row, q[row], 1);
+        // check that col: q[row] is safe
+        if(t[row][q[row]] == 0){
+            // if safe place and continue
+            addToThreats(row, q[row], 1);
 
 #ifdef DEBUG
-	printEntry(row, q[row]);
+	    printEntry(row, q[row]);
 #endif
-	// Recurse to next
-	bool status = search(row+1);
-
-	if(status) {   return true; };
+	        // Recurse to next
+	        search(row+1);
 	
-	// if returned, remove placement
-	addToThreats(row, q[row], -1);
-      } 
+	        // if returned, remove placement
+	        addToThreats(row, q[row], -1);
+        } 
     } 
-    // Backtrack to previous row
-    return false;
-  }
 }
 
 void printSolution()
