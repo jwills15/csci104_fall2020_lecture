@@ -15,8 +15,25 @@ struct Item {
 
 
 //1. Write a comparator that will return true if integer is even 
+struct isEven {
+    bool operator()(int v) {
+        return v%2 == 0;
+    }
+};
 
 // 2. Write a functor that will increment an integer
+struct increment {
+    void operator()(int& t) {
+        t++;
+    }
+};
+
+template <typename T, typename functor>
+struct change {
+    void operator()(shared_ptr<Item<T>> p, functor changer) {
+        changer(p->val);
+    }
+};
 
 
 //  3. Write a recursive function that will take the head of a templated linked list
@@ -24,7 +41,22 @@ struct Item {
 //  if the comparator is true for the list element with update the value of the 
 // element using a functor
 template <class T, class Compare, class Change>
-void changeCond(shared_ptr<Item<T>> head, Compare comp, Change update);
+void changeCond(shared_ptr<Item<T>> head, Compare comp, Change update) {
+    if (head == nullptr) return;
+    if (comp(head->val)) {
+        update(head->val);
+    }
+    changeCond(head->next, comp, update);
+}
+
+template<class T, class Compare, class Change2, class change3>
+void changeCond2(shared_ptr<Item<T>> head, Compare comp, Change2 update, change3 update2) {
+    if (head == nullptr) return;
+    if (comp(head->val)) {
+        update(head, update2);
+    }
+    changeCond2(head->next, comp, update, update2);
+}
 
 // Extra to think about: How would this function change if rather than
 // working on values in Items the Change functor was passed pointers to Items
