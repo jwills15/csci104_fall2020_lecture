@@ -33,8 +33,32 @@ void read_maze(string filename, vector<vector<char> > &maze) {
     ifile.close();
 }
 
+bool solve_helper(vector<vector<char> > &maze, size_t row, size_t column) {
+    maze[row][column] = '*';
+    size_t rows = maze.size(), columns = maze[0].size();
+    if (row == rows-2 && column == columns-1) {
+        return true;
+    }
+
+    if (row+1 < rows && maze[row+1][column] == ' ' && solve_helper(maze, row+1, column)) {
+        return true;
+    }
+    if (row > 0 && maze[row-1][column] == ' ' && solve_helper(maze, row-1, column)){
+        return true;
+    }
+    if (column+1 < columns && maze[row][column+1] == ' ' && solve_helper(maze, row, column+1)) {
+        return true;
+    }
+    if (column > 0 && maze[row][column-1] == ' ' && solve_helper(maze, row, column-1)) {
+        return true;
+    }
+
+    maze[row][column] = ' ';
+    return false;
+}
+
 bool solve(vector<vector<char> > &maze) {
-    return true;
+    return solve_helper(maze, 1, 0);
 }
 
 // Driver code provided.
